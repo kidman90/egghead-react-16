@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Leverage New Features of React 16</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.0.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.0.0/umd/react-dom.production.min.js"></script>
+</head>
+
+<body>
+
+  <div id="root"></div>
+  <div id="portal-container"></div>
+
+  <script type="text/babel">
+    const { Component } = React;
+
+    class Overlay extends Component {
+      constructor(props) {
+        super(props);
+        this.overlayContainer = document.createElement('div');
+        document.body.appendChild(this.overlayContainer);
+      }
+
+      componentWillUnmount() {
+        document.body.removeChild(this.overlayContainer);
+      }
+
+      render() {
+        return ReactDOM.createPortal(
+          <div className="overlay">
+            <span onClick={this.props.onClose}>x</span>
+            {this.props.children}
+          </div>,
+          this.overlayContainer
+        );
+      }
+    }
+
+    class App extends Component {
+      constructor(props) {
+        super(props);
+        this.state = { overlayActive: true };
+      }
+
+      closeOverlay = () => {
+        this.setState({ overlayActive: false });
+      };
+
+      render() {
+        return (
+          <div>
+            <h1>Dashboard</h1>
+            {/*ReactDOM.createPortal(
+              <div>Welcome</div>,
+              document.getElementById('portal-container')
+            )*/}
+            {this.state.overlayActive &&
+              <Overlay onClose={this.closeOverlay}>
+                <div>Welcome</div>
+              </Overlay>}
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+
+</body>
+
+</html>
