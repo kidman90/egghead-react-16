@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Leverage New Features of React 16</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.0.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.0.0/umd/react-dom.production.min.js"></script>
+</head>
+
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { Component } = React;
+
+    class App extends Component {
+      constructor(props) {
+        super(props);
+        this.state = { city: 'vienna' };
+      }
+
+      selectCity = evt => {
+        const newValue = evt.target.value;
+        // this.setState({
+        //   city: newValue
+        // });
+        this.setState((state) => {
+          if (state.city === newValue) {
+            return null;
+          }
+          return {
+            city: newValue
+          }
+        });
+      };
+
+      render() {
+        return (
+          <div>
+            <button type="button" value="vienna" onClick={this.selectCity}>
+              Vienna
+            </button>
+            <button type="button" value="paris" onClick={this.selectCity}>
+              Paris
+            </button><br />
+            <City name={this.state.city} />
+          </div>
+        );
+      }
+    }
+
+    const City = (props) => {
+      return `${props.name}  (${Date.now()})`;
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+
+</body>
+
+</html>
